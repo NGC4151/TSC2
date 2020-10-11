@@ -18,5 +18,7 @@ public:
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
 
-	
+private:
+	//ªÒ»°MenuStyle
+	const struct FTSCMenuStyle* MenuStyle;
 };

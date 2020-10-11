@@ -4,3 +4,11 @@
 
 #include "CoreMinimal.h"
 
+class FTSCMoudule : public FDefaultGameModuleImpl
+{
+public:
+	virtual void StartupModule()override;
+
+	virtual void ShutdownModule()override;
+
+};
