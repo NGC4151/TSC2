@@ -19,6 +19,16 @@ public:
 	void Construct(const FArguments& InArgs);
 
 private:
+	//获取UIscaler
+	float GetUIScaler()const;
+	//获取屏幕尺寸
+	FVector2D GetViewportSize()const;
+
+private:
 	//获取MenuStyle
 	const struct FTSCMenuStyle* MenuStyle;
+	//DPIScaler
+	TAttribute<float>UIScaler;
+	//菜单指针
+	TSharedPtr<class STSCMenuWidget>MenuWidget;
 };

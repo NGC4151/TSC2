@@ -12,6 +12,6 @@ ATSCMenuController::ATSCMenuController()
 void ATSCMenuController::BeginPlay()
 {
 	FInputModeUIOnly InputMode;
-	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	SetInputMode(InputMode);
 }

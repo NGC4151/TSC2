@@ -14,5 +14,9 @@
 				"SlateCore"
 			]
 		}
+	],
+	"TargetPlatforms": [
+		"WindowsNoEditor",
+		"Android"
 	]
 }

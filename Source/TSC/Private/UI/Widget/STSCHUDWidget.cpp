@@ -7,21 +7,63 @@
 #include "Widgets/Images/SImage.h"
 #include "UI/Style/TSCMenuWidgetStyle.h"
 #include "UI/Style/TSCStyle.h"
+#include <Widgets/SOverlay.h>
+#include <Engine/Engine.h>
+#include <Widgets/Layout/SDPIScaler.h>
+#include <UI/Widget/STSCMenuWidget.h>
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void STSCHUDWidget::Construct(const FArguments& InArgs)
 {
+	//绑定UIScaler到GetUIscaler函数
+	UIScaler.Bind(this, &STSCHUDWidget::GetUIScaler);
 	//获取编辑器里的MenuStyle
-	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("bp");
+	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("BP_MenuStyle");
 
 	
 	ChildSlot
 		[
-			SNew(SImage)
-			.Image(&MenuStyle->MenuBackgroundBrush)
+			SNew(SDPIScaler)
+			.DPIScale(UIScaler)[
+				SNew(SOverlay)
+					+ SOverlay::Slot()
+					.HAlign(HAlign_Fill)
+					.VAlign(VAlign_Fill)
+					[
+						SNew(SImage)
+						.Image(&MenuStyle->MenuBackgroundBrush)
+
+					]
+				+ SOverlay::Slot()
+					.HAlign(HAlign_Center)
+					.VAlign(VAlign_Center)
+					[
+						SAssignNew(MenuWidget,STSCMenuWidget)
+
+					]
+
+			]
+
+
 		];
 
 }
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
+float STSCHUDWidget::GetUIScaler() const
+{
+	return GetViewportSize().Y / 1080.f;
+}
+
+FVector2D STSCHUDWidget::GetViewportSize() const
+{
+	//默认的屏幕尺寸
+	FVector2D Result(1920, 1080);
+	//获取屏幕尺寸，存至result
+	if (GEngine && GEngine->GameViewport)
+		GEngine->GameViewport->GetViewportSize(Result);
+
+	return Result;
+	
+}
 

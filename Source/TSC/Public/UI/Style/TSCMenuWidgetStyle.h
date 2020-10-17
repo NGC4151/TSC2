@@ -26,8 +26,13 @@ struct TSC_API FTSCMenuStyle : public FSlateWidgetStyle
 	virtual const FName GetTypeName() const override { return TypeName; };
 	static const FTSCMenuStyle& GetDefault();
 
+	//±³¾°Í¼Æ¬
 	UPROPERTY(EditAnywhere,Category=MenuHUD)
 	      FSlateBrush MenuBackgroundBrush;
+
+	//²Ëµ¥Í¼Æ¬
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FSlateBrush MenuImage;
 };
 
 /**
