@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
+#include <Data/TSCTypes.h>
 
 class SBox;
 class STextBlock;
+class SVerticalBox;
 
 /**
  * 
@@ -22,10 +24,16 @@ public:
 	void Construct(const FArguments& InArgs);
 
 private:
+
+	void OnMenuItemClicked(EMenuItem::Type ItemType);
+
+private:
 	//获取MenuStyle
 	const struct FTSCMenuStyle* MenuStyle;
 	//保存根节点
 	TSharedPtr<SBox>RootSizeBox;
 	//菜单标题文本指针
 	TSharedPtr<STextBlock>TitileText;
+	//菜单垂直框
+	TSharedPtr<SVerticalBox>ContentBox;
 };

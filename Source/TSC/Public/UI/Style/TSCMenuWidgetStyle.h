@@ -6,6 +6,7 @@
 #include "Styling/SlateWidgetStyle.h"
 #include "Styling/SlateWidgetStyleContainerBase.h"
 #include "Styling/SlateBrush.h"
+#include <Fonts/SlateFontInfo.h>
 
 #include "TSCMenuWidgetStyle.generated.h"
 
@@ -33,6 +34,12 @@ struct TSC_API FTSCMenuStyle : public FSlateWidgetStyle
 	//²Ëµ¥Í¼Æ¬
 	UPROPERTY(EditAnywhere, Category = MenuHUD)
 		FSlateBrush MenuImage;
+	//°´Å¥±³¾°Í¼Æ¬
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FSlateBrush MenuItemImage;
+
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+	FSlateFontInfo Font_30;
 };
 
 /**

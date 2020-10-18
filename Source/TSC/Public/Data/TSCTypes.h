@@ -13,3 +13,16 @@ enum class ECultrueTeam : uint8 {
     ZH
 
 };
+
+namespace EMenuItem
+{
+    enum Type
+    {
+        None,
+        StartGame,
+        GameOption,
+        QuitGame,
+        NewGame,
+        ReturnGame
+    };
+}
