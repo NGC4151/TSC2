@@ -23,5 +23,10 @@ TSCLocalization::Register(LOCTEXT("Help", "Help"));
 TSCLocalization::Register(LOCTEXT("Exit", "Exit"));
 TSCLocalization::Register(LOCTEXT("ReturnGame", "ReturnGame"));
 TSCLocalization::Register(LOCTEXT("StartGame", "StartGame"));
+TSCLocalization::Register(LOCTEXT("StartGame", "StartGame"));
+TSCLocalization::Register(LOCTEXT("Chinese", "Chinese"));
+TSCLocalization::Register(LOCTEXT("English", "English"));
+TSCLocalization::Register(LOCTEXT("Sound", "Sound"));
+TSCLocalization::Register(LOCTEXT("Music", "Music"));
 
 #undef LOCTEXT_NAMESPACE

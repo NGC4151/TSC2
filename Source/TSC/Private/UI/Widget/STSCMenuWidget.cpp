@@ -8,6 +8,10 @@
 #include <Widgets/Layout/SBox.h>
 #include <UI/Widget/STSCMenuItemWidget.h>
 #include "Widgets/SBoxPanel.h"
+#include "UI/Widget/STSCGameOptionWidget.h"
+#include <Common/TSCHelper.h>
+#include "Widgets/Images/SImage.h"
+#include <Data/TSCDataHandle.h>
 
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
@@ -53,11 +57,9 @@ void STSCMenuWidget::Construct(const FArguments& InArgs)
 
 	ContentBox->AddSlot()
 		[
-			SNew(STSCMenuItemWidget)
-			.ItemText(NSLOCTEXT("TSCMenu", "StartGame", "StartGame"))
-		    .ItemType(EMenuItem::StartGame)
-.OnClicked(this,&STSCMenuWidget::OnMenuItemClicked)
-
+			SNew(STSCGameOptionWidget)
+			.ChangeLanguage(this, &STSCMenuWidget::ChangeLanguage)
+		.ChangeVolume(this, &STSCMenuWidget::ChangeVolume)
 		];
 	
 }
@@ -65,5 +67,36 @@ END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 void STSCMenuWidget::OnMenuItemClicked(EMenuItem::Type ItemType)
 {
-
+	TSSCHelper::Debug(FString("Button Pressed!"),FColor::Yellow,5.0f);
 }
+
+void STSCMenuWidget::ChangeLanguage(ECultrueTeam Culture)
+{
+	//
+	TSCDataHandle::Get()->ChangeLanguage(Culture);
+}
+
+void STSCMenuWidget::ChangeVolume(const float MusicVol, const float SoundVol)
+{
+	TSCDataHandle::Get()->SetVolume(MusicVol, SoundVol);
+}
+
+/*
+UE_LOG(LogTemp, Warning, TEXT("Button Had Preesed!"));
+
+// UE_LOG message with arguments
+int intVar = 5;
+float floatVar = 3.7f;
+FString fstringVar = "an fstring variable";
+UE_LOG(LogTemp, Warning, TEXT("Text, %d %f %s"), intVar, floatVar, *fstringVar);
+
+//¸ñÊ½»¯×Ö·û´®
+FString name = "Tim";
+int32 mana = 450;
+TArray< FStringFormatArg > args;
+args.Add(FStringFormatArg(name));
+args.Add(FStringFormatArg(mana));
+FString string = FString::Format(TEXT("Name = {0} Mana ={1}"), args);
+
+UE_LOG(LogTemp, Warning, TEXT("Your string: %s"), *string);
+*/

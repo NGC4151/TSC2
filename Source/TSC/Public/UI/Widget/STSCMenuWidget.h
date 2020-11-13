@@ -6,6 +6,7 @@
 #include "Widgets/SCompoundWidget.h"
 #include <Data/TSCTypes.h>
 
+
 class SBox;
 class STextBlock;
 class SVerticalBox;
@@ -18,6 +19,7 @@ class TSC_API STSCMenuWidget : public SCompoundWidget
 public:
 	SLATE_BEGIN_ARGS(STSCMenuWidget)
 	{}
+
 	SLATE_END_ARGS()
 
 	/** Constructs this widget with InArgs */
@@ -26,6 +28,9 @@ public:
 private:
 
 	void OnMenuItemClicked(EMenuItem::Type ItemType);
+	//
+	void ChangeLanguage(ECultrueTeam Culture);
+	void ChangeVolume(const float MusicVol, const float SoundVol);
 
 private:
 	//获取MenuStyle
@@ -36,4 +41,5 @@ private:
 	TSharedPtr<STextBlock>TitileText;
 	//菜单垂直框
 	TSharedPtr<SVerticalBox>ContentBox;
+	
 };

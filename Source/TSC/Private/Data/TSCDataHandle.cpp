@@ -2,6 +2,7 @@
 
 
 #include "Data/TSCDataHandle.h"
+#include "Internationalization/Internationalization.h"
 
 
 
@@ -23,6 +24,11 @@ TSharedPtr<TSCDataHandle> TSCDataHandle::Get()
 
 TSCDataHandle::TSCDataHandle()
 {
+	//默认设置游戏语言为中文
+	CurrentCultrue = ECultrueTeam::ZH;
+	//
+	MusicVolume = 0.5f;
+	SoundVolume = 0.5f;
 }
 
 TSharedRef<TSCDataHandle> TSCDataHandle::Create()
@@ -45,5 +51,18 @@ void TSCDataHandle::ChangeLanguage(ECultrueTeam Cultrue)
 	}
 
 	CurrentCultrue = Cultrue;
+}
+
+void TSCDataHandle::SetVolume(float MusicVol, float SoundVol)
+{
+	if (MusicVol>0)
+	{
+		MusicVolume = MusicVol;
+	}
+
+	if (SoundVol>0)
+	{
+		SoundVolume = SoundVol;
+	}
 }
 

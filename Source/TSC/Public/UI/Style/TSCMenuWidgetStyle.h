@@ -40,6 +40,26 @@ struct TSC_API FTSCMenuStyle : public FSlateWidgetStyle
 
 	UPROPERTY(EditAnywhere, Category = MenuHUD)
 	FSlateFontInfo Font_30;
+
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+	FSlateFontInfo Font_15;
+
+	UPROPERTY(EditAnywhere, Category = GameOption)
+		FSlateBrush GameOptionImage;
+
+	UPROPERTY(EditAnywhere, Category = GameOption)
+		FLinearColor Color_Black;
+
+	UPROPERTY(EditAnywhere, Category = GameOption)
+		FSlateBrush CheckBoxSelect;
+
+	UPROPERTY(EditAnywhere, Category = GameOption)
+		FSlateBrush CheckBoxNoSelect;
+
+	UPROPERTY(EditAnywhere, Category = GameOption)
+		FSlateBrush SliderImage;
+	UPROPERTY(EditAnywhere, Category = GameOption)
+		FSliderStyle SliderStyle;
 };
 
 /**

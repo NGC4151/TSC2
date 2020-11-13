@@ -16,11 +16,18 @@ public:
     static void Initialize();
 
     static TSharedPtr<TSCDataHandle>Get();
-
+    //修改游戏语言
     void ChangeLanguage(ECultrueTeam Cultrue);
+    //
+    void SetVolume(float MusicVol, float SoundVol);
 
 public:
+    //当前语言
     ECultrueTeam CurrentCultrue;
+    //
+    float MusicVolume;
+    //
+    float SoundVolume;
 
 private:
     static TSharedRef<TSCDataHandle>Create();
