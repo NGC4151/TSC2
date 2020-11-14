@@ -16,6 +16,12 @@
 			]
 		}
 	],
+	"Plugins": [
+		{
+			"Name": "Volumetrics",
+			"Enabled": true
+		}
+	],
 	"TargetPlatforms": [
 		"WindowsNoEditor",
 		"Android"
