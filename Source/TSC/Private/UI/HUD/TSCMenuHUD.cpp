@@ -7,7 +7,7 @@
 
 ATSCMenuHUD::ATSCMenuHUD()
 {
-	//Ìí¼Ówidgetµ½ÊÓ¿Ú
+	//å°†widgetæ·»åŠ åˆ°è§†å£
 	if (GEngine&&GEngine->GameViewport)
 	{
 		SAssignNew(MenuHUDWidget, STSCHUDWidget);

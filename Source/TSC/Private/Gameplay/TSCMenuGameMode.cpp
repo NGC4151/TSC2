@@ -7,7 +7,7 @@
 
 ATSCMenuGameMode::ATSCMenuGameMode()
 {
-	//ÔÚgame mode¹¹Ôìº¯ÊıÀïÖ¸¶¨¿ØÖÆÆ÷¡¢hudµÈ
+	//åœ¨game modeä¸­æŒ‡å®šç©å®¶æ§åˆ¶ç±»å’ŒHUDç±»
 	PlayerControllerClass = ATSCMenuController::StaticClass();
 	HUDClass = ATSCMenuHUD::StaticClass();
 }

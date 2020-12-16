@@ -15,9 +15,9 @@
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void STSCHUDWidget::Construct(const FArguments& InArgs)
 {
-	//绑定UIScaler到GetUIscaler函数
+	//缁戝畾UIScaler鍒癎etUIscaler鍑芥暟
 	UIScaler.Bind(this, &STSCHUDWidget::GetUIScaler);
-	//获取编辑器里的MenuStyle
+	//鑾峰彇Content瀵瑰簲鐩綍涓嬬殑BP_MenuStyle
 	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("BP_MenuStyle");
 
 	
@@ -57,9 +57,9 @@ float STSCHUDWidget::GetUIScaler() const
 
 FVector2D STSCHUDWidget::GetViewportSize() const
 {
-	//默认的屏幕尺寸
+	//榛樿鐨勫睆骞曞垎杈ㄧ巼
 	FVector2D Result(1920, 1080);
-	//获取屏幕尺寸，存至result
+	//灏嗗疄闄呯殑灞忓箷鐨勫垎杈ㄧ巼瀛樿嚦Result
 	if (GEngine && GEngine->GameViewport)
 		GEngine->GameViewport->GetViewportSize(Result);
 

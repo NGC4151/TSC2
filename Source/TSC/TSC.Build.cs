@@ -14,6 +14,8 @@ public class TSC : ModuleRules
 			"InputCore",
 			"Slate",
 			"SlateCore",
+			"Json",
+			"JsonUtilities"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

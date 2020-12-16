@@ -15,16 +15,16 @@
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void STSCGameOptionWidget::Construct(const FArguments& InArgs)
 {
-	//»ñÈ¡±à¼­Æ÷ÀïµÄMenuStyle
+	//ï¿½ï¿½È¡ï¿½à¼­ï¿½ï¿½ï¿½ï¿½ï¿½MenuStyle
 	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("BP_MenuStyle");
 
-	//»ñÈ¡Î¯ÍÐ
+	//ï¿½ï¿½È¡Î¯ï¿½ï¿½
 	ChangeLanguage = InArgs._ChangeLanguage;
 	ChangeVolume = InArgs._ChangeVolume;
 	
 	ChildSlot
 	[
-		//µÚÒ»²ã
+		//ï¿½ï¿½Ò»ï¿½ï¿½
 		SNew(SBox)
 		.WidthOverride(500.f)
 		.HeightOverride(300.f)
@@ -43,7 +43,7 @@ void STSCGameOptionWidget::Construct(const FArguments& InArgs)
         .Padding(FMargin(50.f))
 		[
 			SNew(SVerticalBox)
-			//µÚÒ»ÐÐ
+			//ï¿½ï¿½Ò»ï¿½ï¿½
 	+ SVerticalBox::Slot()
 		.HAlign(HAlign_Fill)
 		.VAlign(VAlign_Fill)
@@ -80,7 +80,7 @@ void STSCGameOptionWidget::Construct(const FArguments& InArgs)
 		]
 		]
 
-	//µÚ¶þÐÐ
+	//ï¿½Ú¶ï¿½ï¿½ï¿½
 	+ SVerticalBox::Slot()
 		.HAlign(HAlign_Fill)
 		.VAlign(VAlign_Fill)
@@ -133,7 +133,7 @@ void STSCGameOptionWidget::Construct(const FArguments& InArgs)
 		]
 		]
 
-	//µÚÈýÐÐ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	+ SVerticalBox::Slot()
 		.HAlign(HAlign_Fill)
 		.VAlign(VAlign_Fill)
@@ -191,7 +191,7 @@ void STSCGameOptionWidget::Construct(const FArguments& InArgs)
 		]
 	];
 
-	//³õÊ¼»¯ÑùÊ½
+	//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ê½
 	SetStyle();
 	
 }

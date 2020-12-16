@@ -5,7 +5,7 @@
 
 ATSCMenuController::ATSCMenuController()
 {
-	//ÏÔÊ¾Êó±êÖ¸Õë
+	//æ˜¾ç¤ºé¼ æ ‡æŒ‡é’ˆ
 	bShowMouseCursor = true;
 }
 

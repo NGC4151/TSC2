@@ -6,11 +6,11 @@
 #include "Engine/Engine.h"
 
 /**
- * debugÀà
+ * debugç±»
  */
 
 namespace TSSCHelper {
-    FORCEINLINE void Debug(FString Message, FColor TextColor,float DisplayTime = 3.0f) {
+    FORCEINLINE void Debug(FString Message, FColor TextColor,float DisplayTime = 20.0f) {
         if (GEngine)
         {
             GEngine->AddOnScreenDebugMessage(-1, DisplayTime, TextColor, Message);

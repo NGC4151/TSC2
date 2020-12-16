@@ -3,6 +3,9 @@
 
 #include "Data/TSCDataHandle.h"
 #include "Internationalization/Internationalization.h"
+#include "Data/TSCSingleton.h"
+#include "Data/TSCJsonHandle.h"
+#include <Common/TSCHelper.h>
 
 
 
@@ -24,11 +27,15 @@ TSharedPtr<TSCDataHandle> TSCDataHandle::Get()
 
 TSCDataHandle::TSCDataHandle()
 {
-	//Ĭ��������Ϸ����Ϊ����
+	/*
+	//初始化语言为中文
 	CurrentCultrue = ECultrueTeam::ZH;
-	//
+	//初始化音量
 	MusicVolume = 0.5f;
 	SoundVolume = 0.5f;
+	*/
+	//初始化存档
+	InitSavaData();
 }
 
 TSharedRef<TSCDataHandle> TSCDataHandle::Create()
@@ -66,3 +73,43 @@ void TSCDataHandle::SetVolume(float MusicVol, float SoundVol)
 	}
 }
 
+template<typename TEnum>
+FString TSCDataHandle::GetEnumValueAsString(const FString& Name, TEnum Value)
+{
+	//这里应该是通过枚举名在什么地方找到对应的枚举，然后返回一个该枚举的指针
+	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, *Name, true);
+	//如果枚举没找到，则返回错误信息
+	if (!EnumPtr)
+	{
+		return FString("InValid");
+	}
+	return EnumPtr->GetEnumName((int32)Value);
+}
+
+template<typename TEnum>
+TEnum TSCDataHandle::GetEnumValueFromString(const FString& Name, FString Value)
+{
+	const UEnum* EnumPtr = FindObject<UEnum>(ANY_PACKAGE, *Name, true);
+	if (!EnumPtr)
+	{
+		return TEnum(0);
+	}
+	return (TEnum)EnumPtr->GetIndexByName(FName(*FString(Value)));
+}
+
+void TSCDataHandle::InitSavaData()
+{
+	FString Culture;
+	TSCSingleton<TSCJsonHandle>::Get()->SaveDataRead(Culture, MusicVolume, SoundVolume, SaveDataList);
+
+	//初始化语言
+	ChangeLanguage(GetEnumValueFromString<ECultrueTeam>(FString("ECultrueTeam"), Culture));
+
+	//输出下存档数据
+	TSSCHelper::Debug(Culture + FString("--") + FString::SanitizeFloat(MusicVolume)+ FString("--")
+		+ FString::SanitizeFloat(SoundVolume), FColor::Yellow, 20.f);
+	for (TArray<FString>::TIterator It(SaveDataList); It; ++It)
+	{
+		TSSCHelper::Debug(*It, FColor::Yellow, 20.f);
+	}
+}

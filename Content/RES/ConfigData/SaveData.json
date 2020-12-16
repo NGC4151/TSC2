@@ -1,0 +1,24 @@
+[
+  {
+    "Culture": "ZH"
+  },
+  {
+    "MusicVolume": 0.4
+  },
+  {
+    "SoundVolume": 0.6
+  },
+  {
+    "SaveData": [
+      {
+        "0": "Default"
+      },
+      {
+        "1": "RecordOne"
+      },
+      {
+        "2": "RecordTwo"
+      }
+    ]
+  }
+]
