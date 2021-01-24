@@ -71,3 +71,9 @@ FSlateColor STSCMenuItemWidget::GetTintColor() const
 		return FLinearColor(0.1f, 0.1f, 1.f, 0.5f);
 	return FLinearColor(1.f, 1.f, 1.f, 1.f);
 }
+
+void fun1()
+{
+	
+}
+

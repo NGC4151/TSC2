@@ -16,5 +16,14 @@ class TSC_API ATSCMenuGameMode : public AGameModeBase
 
 public:
 	ATSCMenuGameMode();
+
+	virtual void BeginPlay()override;
+
+	
+	FReply onPressed();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = UI)
+	void addui();
+
 	
 };

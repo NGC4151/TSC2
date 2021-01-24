@@ -11,3 +11,19 @@ ATSCMenuGameMode::ATSCMenuGameMode()
 	PlayerControllerClass = ATSCMenuController::StaticClass();
 	HUDClass = ATSCMenuHUD::StaticClass();
 }
+
+void ATSCMenuGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	//addui();
+}
+
+FReply ATSCMenuGameMode::onPressed()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("add!"));
+
+	return FReply::Handled();
+
+}
+

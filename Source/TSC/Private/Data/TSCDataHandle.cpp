@@ -27,14 +27,7 @@ TSharedPtr<TSCDataHandle> TSCDataHandle::Get()
 
 TSCDataHandle::TSCDataHandle()
 {
-	/*
-	//初始化语言为中文
-	CurrentCultrue = ECultrueTeam::ZH;
-	//初始化音量
-	MusicVolume = 0.5f;
-	SoundVolume = 0.5f;
-	*/
-	//初始化存档
+	//初始化存档数据
 	InitSavaData();
 }
 
@@ -58,6 +51,8 @@ void TSCDataHandle::ChangeLanguage(ECultrueTeam Cultrue)
 	}
 
 	CurrentCultrue = Cultrue;
+
+	TSCSingleton<TSCJsonHandle>::Get()->UpDataSaveData(GetEnumValueAsString<ECultrueTeam>(FString("ECultrueTeam"), CurrentCultrue), MusicVolume, SoundVolume, &SaveDataList);
 }
 
 void TSCDataHandle::SetVolume(float MusicVol, float SoundVol)
@@ -71,8 +66,11 @@ void TSCDataHandle::SetVolume(float MusicVol, float SoundVol)
 	{
 		SoundVolume = SoundVol;
 	}
+
+	TSCSingleton<TSCJsonHandle>::Get()->UpDataSaveData(GetEnumValueAsString<ECultrueTeam>(FString("ECultrueTeam"), CurrentCultrue), MusicVolume, SoundVolume, &SaveDataList);
 }
 
+//通过一个字符串获取枚举值
 template<typename TEnum>
 FString TSCDataHandle::GetEnumValueAsString(const FString& Name, TEnum Value)
 {
@@ -83,9 +81,10 @@ FString TSCDataHandle::GetEnumValueAsString(const FString& Name, TEnum Value)
 	{
 		return FString("InValid");
 	}
-	return EnumPtr->GetEnumName((int32)Value);
+	return EnumPtr->GetNameStringByIndex((int32)Value);
 }
 
+//通过一个字符串
 template<typename TEnum>
 TEnum TSCDataHandle::GetEnumValueFromString(const FString& Name, FString Value)
 {
@@ -105,11 +104,13 @@ void TSCDataHandle::InitSavaData()
 	//初始化语言
 	ChangeLanguage(GetEnumValueFromString<ECultrueTeam>(FString("ECultrueTeam"), Culture));
 
-	//输出下存档数据
+	/*输出下存档数据
 	TSSCHelper::Debug(Culture + FString("--") + FString::SanitizeFloat(MusicVolume)+ FString("--")
 		+ FString::SanitizeFloat(SoundVolume), FColor::Yellow, 20.f);
 	for (TArray<FString>::TIterator It(SaveDataList); It; ++It)
 	{
 		TSSCHelper::Debug(*It, FColor::Yellow, 20.f);
 	}
+
+	*/
 }

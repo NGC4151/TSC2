@@ -28,38 +28,59 @@ struct TSC_API FTSCMenuStyle : public FSlateWidgetStyle
 	static const FTSCMenuStyle& GetDefault();
 
 	//±³¾°Í¼Æ¬
-	UPROPERTY(EditAnywhere,Category=MenuHUD)
-	      FSlateBrush MenuBackgroundBrush;
-
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FSlateBrush MenuBackgroundBrush;
+	//±³¾°Í¼Æ¬
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FSlateBrush headeIcon;
+	//±³¾°Í¼Æ¬
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FSlateBrush SpacerImage;
+	//±³¾°Í¼Æ¬
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FSlateBrush TitleBackgroundBrush;
+	//±³¾°Í¼Æ¬
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FSlateBrush StarCraftLogo;
 	//²Ëµ¥Í¼Æ¬
 	UPROPERTY(EditAnywhere, Category = MenuHUD)
 		FSlateBrush MenuImage;
 	//°´Å¥±³¾°Í¼Æ¬
 	UPROPERTY(EditAnywhere, Category = MenuHUD)
 		FSlateBrush MenuItemImage;
-
+	//30ºÅ×ÖÌå
 	UPROPERTY(EditAnywhere, Category = MenuHUD)
-	FSlateFontInfo Font_30;
-
+	    FSlateFontInfo Font_30;
+	//15ºÅ×ÖÌå
 	UPROPERTY(EditAnywhere, Category = MenuHUD)
-	FSlateFontInfo Font_15;
+	    FSlateFontInfo Font_15;
+	//»¬ÌõµÄÑùÊ½
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FSliderStyle SliderStyle;
+	//ÎÄ±¾style
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FTextBlockStyle MyTextStyle;
+	//¶¥²¿°´¼üstyle
+	UPROPERTY(EditAnywhere, Category = MenuHUD)
+		FButtonStyle TopButtonStyle;
 
+	//ÓÎÏ·ÉèÖÃ¿Ø¼þ±³¾°Í¼Æ¬
 	UPROPERTY(EditAnywhere, Category = GameOption)
 		FSlateBrush GameOptionImage;
-
+	//ºÚÉ«
 	UPROPERTY(EditAnywhere, Category = GameOption)
 		FLinearColor Color_Black;
-
+	//CheckBox¹´Ñ¡Í¼Æ¬
 	UPROPERTY(EditAnywhere, Category = GameOption)
 		FSlateBrush CheckBoxSelect;
-
+	//CheckBoxÎ´¹´Ñ¡Í¼Æ¬
 	UPROPERTY(EditAnywhere, Category = GameOption)
 		FSlateBrush CheckBoxNoSelect;
-
+	//»¬ÌõµÄ±³¾°Í¼Æ¬
 	UPROPERTY(EditAnywhere, Category = GameOption)
 		FSlateBrush SliderImage;
-	UPROPERTY(EditAnywhere, Category = GameOption)
-		FSliderStyle SliderStyle;
+	
+	
 };
 
 /**
