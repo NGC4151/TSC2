@@ -15,6 +15,7 @@
 #include <UI/Widget/STSCMenuItemWidget.h>
 #include <Gameplay/TSCMenuGameMode.h>
 #include <Common/TSCHelper.h>
+#include <Kismet/GameplayStatics.h>
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void STSCHUDWidget::Construct(const FArguments& InArgs)
@@ -204,7 +205,8 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 													.AutoWidth()
 												    [
 														SNew(SBox)
-                                                            .HeightOverride(60.f)
+                             
+														.HeightOverride(60.f)
 														    .WidthOverride(150.f)
 														    [
 																SNew(SButton)
@@ -420,8 +422,10 @@ FVector2D STSCHUDWidget::GetViewportSize() const
 
 FReply STSCHUDWidget::onPress()
 {
-
+	
+	UGameplayStatics::OpenLevel(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), FName("mymap"));
 	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("add!"));
 	return FReply::Handled();
+	
 }
 
