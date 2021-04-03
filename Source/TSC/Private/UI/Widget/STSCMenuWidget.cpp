@@ -59,7 +59,7 @@ void STSCMenuWidget::Construct(const FArguments& InArgs)
 		[
 			SNew(STSCGameOptionWidget)
 			.ChangeLanguage(this, &STSCMenuWidget::ChangeLanguage)
-		.ChangeVolume(this, &STSCMenuWidget::ChangeVolume)
+		    .ChangeVolume(this, &STSCMenuWidget::ChangeVolume)
 		];
 	
 }

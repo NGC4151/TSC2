@@ -172,7 +172,7 @@ void STSCGameOptionWidget::Construct(const FArguments& InArgs)
 		[
 			SAssignNew(SoundSlider, SSlider)
 			.Style(&MenuStyle->SliderStyle)
-		.OnValueChanged(this, &STSCGameOptionWidget::SoundSliderValueChange)
+		    .OnValueChanged(this, &STSCGameOptionWidget::SoundSliderValueChange)
 		]
 
 	+ SOverlay::Slot()
@@ -192,7 +192,7 @@ void STSCGameOptionWidget::Construct(const FArguments& InArgs)
 		]
 	];
 
-	//��ʼ����ʽ
+	//初始化样式
 	SetStyle();
 	
 }
@@ -268,7 +268,6 @@ void STSCGameOptionWidget::ZhCheckBoxStateChanged(ECheckBoxState NewState)
 	EnCheckBox->SetIsChecked(ECheckBoxState::Unchecked);
 	ZhCheckBox->SetIsChecked(ECheckBoxState::Checked);
 	//
-	//TSCDataHandle::Get()->ChangeLanguage(ECultrueTeam::ZH);
 	ChangeLanguage.ExecuteIfBound(ECultrueTeam::ZH);
 }
 
@@ -278,7 +277,6 @@ void STSCGameOptionWidget::EnCheckBoxStateChanged(ECheckBoxState NewState)
 	EnCheckBox->SetIsChecked(ECheckBoxState::Checked);
 	ZhCheckBox->SetIsChecked(ECheckBoxState::Unchecked);
 	//
-	//TSCDataHandle::Get()->ChangeLanguage(ECultrueTeam::EN);
 	ChangeLanguage.ExecuteIfBound(ECultrueTeam::EN);
 }
 

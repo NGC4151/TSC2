@@ -11,6 +11,7 @@ void STSCMenuItemWidget::Construct(const FArguments& InArgs)
 {
 	//获取编辑器里的MenuStyle
 	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("BP_MenuStyle");
+
 	OnClicked = InArgs._OnClicked;
 	ItemType = InArgs._ItemType.Get();
 	bISButtonPressed = false;
@@ -72,8 +73,4 @@ FSlateColor STSCMenuItemWidget::GetTintColor() const
 	return FLinearColor(1.f, 1.f, 1.f, 1.f);
 }
 
-void fun1()
-{
-	
-}
 

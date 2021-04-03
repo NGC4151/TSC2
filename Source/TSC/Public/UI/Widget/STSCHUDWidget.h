@@ -9,7 +9,7 @@
 /**
  * 
  */
-
+class ATSCMenuGameMode;
 
 class TSC_API STSCHUDWidget : public SCompoundWidget
 {
@@ -30,16 +30,14 @@ private:
 	//获取屏幕尺寸
 	FVector2D GetViewportSize()const;
 	//
-	TSharedPtr<class ATSCMenuGameMode>MyGameMode;
+	ATSCMenuGameMode* MyGameMode;
 	
 private:
 	//获取MenuStyle
 	const struct FTSCMenuStyle* MenuStyle;
 	//DPIScaler
 	TAttribute<float>UIScaler;
-	//菜单指针
-	TSharedPtr<class STSCMenuWidget>MenuWidget;
-
-
+	//菜单指针	
+	TSharedPtr<class STSCMenuWidget> MenueWidget;
 
 };

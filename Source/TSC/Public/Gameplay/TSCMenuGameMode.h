@@ -20,7 +20,7 @@ public:
 	virtual void BeginPlay()override;
 
 	
-	FReply onPressed();
+	void onPressed();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = UI)
 	void addui();

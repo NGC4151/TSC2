@@ -16,6 +16,7 @@
 #include <Gameplay/TSCMenuGameMode.h>
 #include <Common/TSCHelper.h>
 #include <Kismet/GameplayStatics.h>
+#include <Blueprint/UserWidget.h>
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void STSCHUDWidget::Construct(const FArguments& InArgs)
@@ -31,12 +32,6 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 			SNew(SDPIScaler)
 			.DPIScale(UIScaler)[
 				SNew(SOverlay)
-					+ SOverlay::Slot()
-					.HAlign(HAlign_Center)
-					.VAlign(VAlign_Center)
-					[
-						SAssignNew(MenuWidget, STSCMenuWidget)
-					]
 
 					+ SOverlay::Slot()
 					.HAlign(HAlign_Fill)
@@ -423,9 +418,20 @@ FVector2D STSCHUDWidget::GetViewportSize() const
 FReply STSCHUDWidget::onPress()
 {
 	
-	UGameplayStatics::OpenLevel(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), FName("mymap"));
-	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("add!"));
+	//UGameplayStatics::OpenLevel(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), FName("mymap"));
+	MyGameMode=Cast<ATSCMenuGameMode>(UGameplayStatics::GetGameMode(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld()));
+	MyGameMode->onPressed();
+	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("prees!"));
+
+		
 	return FReply::Handled();
 	
 }
 
+/*
+if (GEngine && GEngine->GameViewport)
+{
+	SAssignNew(MenueWidget, STSCMenuWidget);
+	GEngine->GameViewport->AddViewportWidgetContent(SNew(SWeakWidget).PossiblyNullContent(MenueWidget.ToSharedRef()));
+}
+*/

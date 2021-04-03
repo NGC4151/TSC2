@@ -16,14 +16,13 @@ void ATSCMenuGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//addui();
+	
 }
 
-FReply ATSCMenuGameMode::onPressed()
+void ATSCMenuGameMode::onPressed()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("add!"));
-
-	return FReply::Handled();
-
+	addui();
+	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("game mode called!!"));
 }
+
 
