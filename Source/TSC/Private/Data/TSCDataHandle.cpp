@@ -98,7 +98,10 @@ TEnum TSCDataHandle::GetEnumValueFromString(const FString& Name, FString Value)
 
 void TSCDataHandle::InitSavaData()
 {
+	SaveDataName = FString("");
+	//获取语言
 	FString Culture;
+	//获取存档数据
 	TSCSingleton<TSCJsonHandle>::Get()->SaveDataRead(Culture, MusicVolume, SoundVolume, SaveDataList);
 
 	//初始化语言

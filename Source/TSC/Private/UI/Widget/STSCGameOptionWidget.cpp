@@ -16,7 +16,7 @@
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void STSCGameOptionWidget::Construct(const FArguments& InArgs)
 {
-	//��ȡ�༭�����MenuStyle
+	//获取MenuStyle
 	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("BP_MenuStyle");
 
 	//��ȡί��
@@ -256,8 +256,7 @@ void STSCGameOptionWidget::SoundSliderValueChange(float Value)
 	//
 	SoundTextBlock->SetText(FText::FromString(FString::FromInt(FMath::RoundToInt(Value * 100)) + FString("%")));
 	//
-	//TSCDataHandle::Get()->SetVolume(-1.f, -Value);
-	ChangeVolume.ExecuteIfBound(-1.f, -Value);
+	ChangeVolume.ExecuteIfBound(-1.f, Value);
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

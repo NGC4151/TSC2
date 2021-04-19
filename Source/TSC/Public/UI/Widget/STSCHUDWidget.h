@@ -11,6 +11,18 @@
  */
 class ATSCMenuGameMode;
 
+UENUM()
+enum class ESubMenu : uint8 {
+	None,
+	Battle,
+	Cooperation,
+	Against,
+	Custom,
+	Collection,
+	Replay
+
+};
+
 class TSC_API STSCHUDWidget : public SCompoundWidget
 {
 public:
@@ -33,11 +45,17 @@ private:
 	ATSCMenuGameMode* MyGameMode;
 	
 private:
+	UPROPERTY(EditAnywhere, Category = "Health")
+		TSubclassOf<class UUserWidget> HUDWidgetClass;
+	UPROPERTY(EditAnywhere, Category = "Health")
+		class UUserWidget* CurrentWidget;
 	//获取MenuStyle
 	const struct FTSCMenuStyle* MenuStyle;
 	//DPIScaler
 	TAttribute<float>UIScaler;
 	//菜单指针	
 	TSharedPtr<class STSCMenuWidget> MenueWidget;
+	//
+	bool bIsPress;
 
 };

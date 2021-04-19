@@ -12,6 +12,8 @@
 #include <Common/TSCHelper.h>
 #include "Widgets/Images/SImage.h"
 #include <Data/TSCDataHandle.h>
+#include <UI/Widget/STSCNewGameWidget.h>
+#include <UI/Widget/STSCChooseSaveDataWidget.h>
 
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
@@ -57,9 +59,12 @@ void STSCMenuWidget::Construct(const FArguments& InArgs)
 
 	ContentBox->AddSlot()
 		[
+			SNew(STSCChooseSaveDataWidget)
+			/*
 			SNew(STSCGameOptionWidget)
 			.ChangeLanguage(this, &STSCMenuWidget::ChangeLanguage)
 		    .ChangeVolume(this, &STSCMenuWidget::ChangeVolume)
+			*/
 		];
 	
 }

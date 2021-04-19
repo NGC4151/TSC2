@@ -17,6 +17,7 @@
 #include <Common/TSCHelper.h>
 #include <Kismet/GameplayStatics.h>
 #include <Blueprint/UserWidget.h>
+#include "UObject/ConstructorHelpers.h"
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void STSCHUDWidget::Construct(const FArguments& InArgs)
@@ -25,6 +26,11 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 	UIScaler.Bind(this, &STSCHUDWidget::GetUIScaler);
 	//获取Content对应目录下的BP_MenuStyle
 	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("BP_MenuStyle");
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> HealthBarObj(TEXT("/Game/UI/button1"));
+	HUDWidgetClass = HealthBarObj.Class;
+
+	bIsPress = false;
 
 
 	ChildSlot
@@ -37,6 +43,7 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 					.HAlign(HAlign_Fill)
 					.VAlign(VAlign_Top)
 					[
+						
 						SNew(SBox)
                         .HeightOverride(60.f)
 						    [
@@ -386,6 +393,12 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 						    ]
 
 						]
+					+ SOverlay::Slot()
+						.HAlign(HAlign_Center)
+						.VAlign(VAlign_Center)
+						[
+							SNew(STSCMenuWidget)
+						]
 			]
 		];
 
@@ -419,11 +432,26 @@ FReply STSCHUDWidget::onPress()
 {
 	
 	//UGameplayStatics::OpenLevel(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), FName("mymap"));
-	MyGameMode=Cast<ATSCMenuGameMode>(UGameplayStatics::GetGameMode(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld()));
-	MyGameMode->onPressed();
-	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("prees!"));
+	if (!bIsPress)
+	{
+		if (HUDWidgetClass != nullptr)
+		{
+			CurrentWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), HUDWidgetClass);
 
-		
+			if (CurrentWidget)
+			{
+				CurrentWidget->AddToViewport();
+			}
+		}
+		bIsPress = true;
+		GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("prees!"));
+
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("had add,cant add aging!"));
+	}
+	
 	return FReply::Handled();
 	
 }

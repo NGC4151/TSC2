@@ -30,6 +30,8 @@ public:
     float SoundVolume;
     //存档数据
     TArray<FString>SaveDataList;
+    //存档名
+    FString SaveDataName;
 
 private:
     //创建单例
