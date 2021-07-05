@@ -55,8 +55,8 @@ void STSCChooseSaveDataWidget::Construct(const FArguments& InArgs)
 		    .WidthOverride(300.f)
 		[
 			SAssignNew(SaveDataComboBox,STextComboBox)
-.Font(MenuStyle->Font_15)
-.OptionsSource(&OptionSource)
+            .Font(MenuStyle->Font_15)
+            .OptionsSource(&OptionSource)
 		]
 		]
 

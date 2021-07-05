@@ -14,3 +14,5 @@ ATSCMenuHUD::ATSCMenuHUD()
 		GEngine->GameViewport->AddViewportWidgetContent(SNew(SWeakWidget).PossiblyNullContent(MenuHUDWidget.ToSharedRef()));
 	}
 }
+
+

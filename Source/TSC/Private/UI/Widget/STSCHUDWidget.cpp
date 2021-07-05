@@ -18,20 +18,12 @@
 #include <Kismet/GameplayStatics.h>
 #include <Blueprint/UserWidget.h>
 #include "UObject/ConstructorHelpers.h"
+#include <UI/Widget/SMainMenuItemWidget.h>
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void STSCHUDWidget::Construct(const FArguments& InArgs)
 {
-	//绑定UIScaler到GetUIscaler函数
-	UIScaler.Bind(this, &STSCHUDWidget::GetUIScaler);
-	//获取Content对应目录下的BP_MenuStyle
-	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("BP_MenuStyle");
-
-	static ConstructorHelpers::FClassFinder<UUserWidget> HealthBarObj(TEXT("/Game/UI/button1"));
-	HUDWidgetClass = HealthBarObj.Class;
-
-	bIsPress = false;
-
+	InitializedMenu();
 
 	ChildSlot
 		[
@@ -94,21 +86,11 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 												    .VAlign(VAlign_Fill)
 													.AutoWidth()
 												    [
-														SNew(SBox)
-                                                            .HeightOverride(60.f)
-														    .WidthOverride(150.f)
-														    [
-																SNew(SButton)
-																    .HAlign(HAlign_Center)
-														            .VAlign(VAlign_Center)
-														            .ButtonStyle(&MenuStyle->TopButtonStyle)
-														            .OnClicked(this, &STSCHUDWidget::onPress)
-														            [
-																		SNew(STextBlock)
-																		.TextStyle(&MenuStyle->MyTextStyle)
-                                                                        .Text(NSLOCTEXT("TSCMenu", "Battle", "Battle"))
-																	]
-															]
+														SNew(SMainMenuItemWidget)
+														.ItemText(NSLOCTEXT("TSCMenu", "Battle", "Battle"))
+														.ItemType(EMainMenuItem::Battle)
+														.OnClicked(this, &STSCHUDWidget::OnMenuItemClicked)
+
 													]
 													//2
 													+SHorizontalBox::Slot()
@@ -130,22 +112,10 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 												    .VAlign(VAlign_Fill)
 													.AutoWidth()
 												    [
-														SNew(SBox)
-                                                            .HeightOverride(60.f)
-														    .WidthOverride(150.f)
-														    [
-																SNew(SButton)
-																    .HAlign(HAlign_Center)
-														            .VAlign(VAlign_Center)
-														            .OnClicked(this, &STSCHUDWidget::onPress)
-														            .ButtonStyle(&MenuStyle->TopButtonStyle)
-														            [
-																		SNew(STextBlock)
-																		.TextStyle(&MenuStyle->MyTextStyle)
-                                                                        .Text(NSLOCTEXT("TSCMenu", "Cooperation", "Cooperation"))
-																	]
-													
-															]
+														SNew(SMainMenuItemWidget)
+														.ItemText(NSLOCTEXT("TSCMenu", "Cooperation", "Cooperation"))
+														.ItemType(EMainMenuItem::Cooperation)
+														.OnClicked(this, &STSCHUDWidget::OnMenuItemClicked)
 													]
 
 													//3
@@ -168,22 +138,11 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 												    .VAlign(VAlign_Fill)
 													.AutoWidth()
 												    [
-														SNew(SBox)
-                                                            .HeightOverride(60.f)
-														    .WidthOverride(150.f)
-														    [
-																SNew(SButton)
-																    .HAlign(HAlign_Center)
-														            .VAlign(VAlign_Center)
-														            .OnClicked(this, &STSCHUDWidget::onPress)
-														            .ButtonStyle(&MenuStyle->TopButtonStyle)
-														            [
-																		SNew(STextBlock)
-																		.TextStyle(&MenuStyle->MyTextStyle)
-                                                                        .Text(NSLOCTEXT("TSCMenu", "Against", "Against"))
-																	]
-													
-															]
+														SNew(SMainMenuItemWidget)
+														.ItemText(NSLOCTEXT("TSCMenu", "Against", "Against"))
+														.ItemType(EMainMenuItem::Against)
+														.OnClicked(this, &STSCHUDWidget::OnMenuItemClicked)
+														
 													]
 
 													//4
@@ -206,23 +165,11 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 												    .VAlign(VAlign_Fill)
 													.AutoWidth()
 												    [
-														SNew(SBox)
-                             
-														.HeightOverride(60.f)
-														    .WidthOverride(150.f)
-														    [
-																SNew(SButton)
-																    .HAlign(HAlign_Center)
-														            .VAlign(VAlign_Center)
-														            .OnClicked(this, &STSCHUDWidget::onPress)
-														            .ButtonStyle(&MenuStyle->TopButtonStyle)
-														            [
-																		SNew(STextBlock)
-																		.TextStyle(&MenuStyle->MyTextStyle)
-                                                                        .Text(NSLOCTEXT("TSCMenu", "Custom", "Custom"))
-																	]
-													
-															]
+														SNew(SMainMenuItemWidget)
+														.ItemText(NSLOCTEXT("TSCMenu", "Custom", "Custom"))
+														.ItemType(EMainMenuItem::Custom)
+														.OnClicked(this, &STSCHUDWidget::OnMenuItemClicked)
+														
 													]
 
 													//5
@@ -245,22 +192,10 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 												    .VAlign(VAlign_Fill)
 													.AutoWidth()
 												    [
-														SNew(SBox)
-                                                            .HeightOverride(60.f)
-														    .WidthOverride(150.f)
-														    [
-																SNew(SButton)
-																    .HAlign(HAlign_Center)
-														            .VAlign(VAlign_Center)
-														            .OnClicked(this, &STSCHUDWidget::onPress)
-														            .ButtonStyle(&MenuStyle->TopButtonStyle)
-														            [
-																		SNew(STextBlock)
-																		.TextStyle(&MenuStyle->MyTextStyle)
-                                                                        .Text(NSLOCTEXT("TSCMenu", "Collection", "Collection"))
-																	]
-													
-															]
+														SNew(SMainMenuItemWidget)
+														.ItemText(NSLOCTEXT("TSCMenu", "Collection", "Collection"))
+														.ItemType(EMainMenuItem::Collection)
+														.OnClicked(this, &STSCHUDWidget::OnMenuItemClicked)												
 													]
 
 													//6
@@ -283,22 +218,10 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 												    .VAlign(VAlign_Fill)
 													.AutoWidth()
 												    [
-														SNew(SBox)
-                                                            .HeightOverride(60.f)
-														    .WidthOverride(150.f)
-														    [
-																SNew(SButton)
-																    .HAlign(HAlign_Center)
-														            .VAlign(VAlign_Center)
-                                                                    .OnClicked(this,&STSCHUDWidget::onPress)
-														            .ButtonStyle(&MenuStyle->TopButtonStyle)
-														            [
-																		SNew(STextBlock)
-																		.TextStyle(&MenuStyle->MyTextStyle)
-                                                                        .Text(NSLOCTEXT("TSCMenu", "Replay", "Replay"))
-																	]
-													
-															]
+														SNew(SMainMenuItemWidget)
+														.ItemText(NSLOCTEXT("TSCMenu", "Replay", "Replay"))
+														.ItemType(EMainMenuItem::Replay)
+														.OnClicked(this, &STSCHUDWidget::OnMenuItemClicked)														
 													]
 
 													+SHorizontalBox::Slot()
@@ -314,11 +237,7 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 													        .Image(&MenuStyle->SpacerImage)
 												        ]
 													]
-
-												
-
-													
-												
+																																			
 											]
 
 											+ SOverlay::Slot()
@@ -393,12 +312,7 @@ void STSCHUDWidget::Construct(const FArguments& InArgs)
 						    ]
 
 						]
-					+ SOverlay::Slot()
-						.HAlign(HAlign_Center)
-						.VAlign(VAlign_Center)
-						[
-							SNew(STSCMenuWidget)
-						]
+					
 			]
 		];
 
@@ -413,7 +327,7 @@ END_SLATE_FUNCTION_BUILD_OPTIMIZATION
 
 float STSCHUDWidget::GetUIScaler() const
 {
-	return GetViewportSize().Y / 1080.f;
+	return GetViewportSize().Y / 1440.f;
 }
 
 FVector2D STSCHUDWidget::GetViewportSize() const
@@ -428,38 +342,251 @@ FVector2D STSCHUDWidget::GetViewportSize() const
 
 }
 
-FReply STSCHUDWidget::onPress()
-{
-	
-	//UGameplayStatics::OpenLevel(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), FName("mymap"));
-	if (!bIsPress)
-	{
-		if (HUDWidgetClass != nullptr)
-		{
-			CurrentWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), HUDWidgetClass);
 
-			if (CurrentWidget)
+
+void STSCHUDWidget::OnMenuItemClicked(EMainMenuItem::Type ItemType)
+{
+	switch (ItemType)
+	{
+	case EMainMenuItem::Battle:
+		if (!BattleLock)
+		{
+			if (CurrentWidget)CurrentWidget->RemoveFromViewport();
+			CurrentWidget = nullptr;
+			if (BattleWidgetClass != nullptr)
 			{
-				CurrentWidget->AddToViewport();
+				CurrentWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), BattleWidgetClass);
+
+				if (CurrentWidget)
+				{
+					CurrentWidget->AddToViewport();
+					TSSCHelper::Debug(FString("Battle!"), FColor::Yellow, 5.f);
+					SetLockState(1);
+				}
 			}
 		}
-		bIsPress = true;
-		GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("prees!"));
+		else
+		{
+			TSSCHelper::Debug(FString("Battle had Added!"), FColor::Yellow, 5.f);
+		}
+		break;
+	case EMainMenuItem::Cooperation:
+		if (!CooperationLock)
+		{
+			if (CurrentWidget)CurrentWidget->RemoveFromViewport();
+			CurrentWidget = nullptr;
+			if (CooperationWidgetClass != nullptr)
+			{
+				CurrentWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), CooperationWidgetClass);
 
+				if (CurrentWidget)
+				{
+					CurrentWidget->AddToViewport();
+					TSSCHelper::Debug(FString("Cooperation!"), FColor::Yellow, 5.f);
+					SetLockState(2);
+				}
+			}
+		}
+		else
+		{
+			TSSCHelper::Debug(FString("Cooperation had Added!"), FColor::Yellow, 5.f);
+		}
+		break;
+	case EMainMenuItem::Against:
+		if (!AgainstLock)
+		{
+			if (CurrentWidget)CurrentWidget->RemoveFromViewport();
+			CurrentWidget = nullptr;
+			if (AgainstWidgetClass != nullptr)
+			{
+				CurrentWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), AgainstWidgetClass);
+
+				if (CurrentWidget)
+				{
+					CurrentWidget->AddToViewport();
+					TSSCHelper::Debug(FString("Against!"), FColor::Yellow, 5.f);
+					SetLockState(3);
+				}
+			}
+		}
+		else
+		{
+			TSSCHelper::Debug(FString("Against had Added!"), FColor::Yellow, 5.f);
+		}
+		break;
+	case EMainMenuItem::Custom:
+		if (!CustomLock)
+		{
+			if (CurrentWidget)CurrentWidget->RemoveFromViewport();
+			CurrentWidget = nullptr;
+			if (CustomWidgetClass != nullptr)
+			{
+				CurrentWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), CustomWidgetClass);
+
+				if (CurrentWidget)
+				{
+					CurrentWidget->AddToViewport();
+					TSSCHelper::Debug(FString("Custom!"), FColor::Yellow, 5.f);
+					SetLockState(4);
+				}
+			}
+		}
+		else
+		{
+			TSSCHelper::Debug(FString("Custom had Added!"), FColor::Yellow, 5.f);
+		}
+		break;
+	case EMainMenuItem::Collection:
+		if (!CollectionLock)
+		{
+			if (CurrentWidget)CurrentWidget->RemoveFromViewport();
+			CurrentWidget = nullptr;
+			if (CollectionWidgetClass != nullptr)
+			{
+				CurrentWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), CollectionWidgetClass);
+
+				if (CurrentWidget)
+				{
+					CurrentWidget->AddToViewport();
+					TSSCHelper::Debug(FString("Collection!"), FColor::Yellow, 5.f);
+					SetLockState(5);
+				}
+			}
+		}
+		else
+		{
+			TSSCHelper::Debug(FString("Collection had Added!"), FColor::Yellow, 5.f);
+		}
+		break;
+	case EMainMenuItem::Replay:
+		if (!ReplayLock)
+		{
+			if (CurrentWidget)CurrentWidget->RemoveFromViewport();
+			CurrentWidget = nullptr;
+			if (ReplayWidgetClass != nullptr)
+			{
+				CurrentWidget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), ReplayWidgetClass);
+
+				if (CurrentWidget)
+				{
+					CurrentWidget->AddToViewport();
+					TSSCHelper::Debug(FString("Replay!"), FColor::Yellow, 5.f);
+					SetLockState(6);
+				}
+			}
+		}
+		else
+		{
+			TSSCHelper::Debug(FString("Replay had Added!"), FColor::Yellow, 5.f);
+		}
+		break;
 	}
-	else
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("had add,cant add aging!"));
-	}
-	
-	return FReply::Handled();
-	
 }
 
-/*
-if (GEngine && GEngine->GameViewport)
+void STSCHUDWidget::SetLockState(int32 num)
 {
-	SAssignNew(MenueWidget, STSCMenuWidget);
-	GEngine->GameViewport->AddViewportWidgetContent(SNew(SWeakWidget).PossiblyNullContent(MenueWidget.ToSharedRef()));
+	switch (num)
+	{
+	case 1:
+		BattleLock = true;
+		CooperationLock = false;
+		AgainstLock = false;
+		CustomLock = false;
+		CollectionLock = false;
+		ReplayLock = false;
+		break;
+	case 2:
+		BattleLock = false;
+		CooperationLock = true;
+		AgainstLock = false;
+		CustomLock = false;
+		CollectionLock = false;
+		ReplayLock = false;
+		break;
+	case 3:
+		BattleLock = false;
+		CooperationLock = false;
+		AgainstLock = true;
+		CustomLock = false;
+		CollectionLock = false;
+		ReplayLock = false;
+		break;
+	case 4:
+		BattleLock = false;
+		CooperationLock = false;
+		AgainstLock = false;
+		CustomLock = true;
+		CollectionLock = false;
+		ReplayLock = false;
+		break;
+	case 5:
+		BattleLock = false;
+		CooperationLock = false;
+		AgainstLock = false;
+		CustomLock = false;
+		CollectionLock = true;
+		ReplayLock = false;
+		break;
+	case 6:
+		BattleLock = false;
+		CooperationLock = false;
+		AgainstLock = true;
+		CustomLock = false;
+		CollectionLock = false;
+		ReplayLock = true;
+		break;
+	}
 }
-*/
+
+void STSCHUDWidget::InitializedMenu()
+{
+	//绑定UIScaler到GetUIscaler函数
+	UIScaler.Bind(this, &STSCHUDWidget::GetUIScaler);
+	//获取Content对应目录下的BP_MenuStyle
+	MenuStyle = &FTSCStyle::Get().GetWidgetStyle<FTSCMenuStyle>("BP_MenuStyle");
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> BattleObj(TEXT("/Game/UI/Battle"));
+	BattleWidgetClass = BattleObj.Class;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> CooperationObj(TEXT("/Game/UI/Cooperation"));
+	CooperationWidgetClass = CooperationObj.Class;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> AgainstObj(TEXT("/Game/UI/Against"));
+	AgainstWidgetClass = AgainstObj.Class;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> CustomObj(TEXT("/Game/UI/Custom"));
+	CustomWidgetClass = CustomObj.Class;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> CollectionObj(TEXT("/Game/UI/Collection"));
+	CollectionWidgetClass = CollectionObj.Class;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget>ReplayObj(TEXT("/Game/UI/Replay"));
+	ReplayWidgetClass = ReplayObj.Class;
+
+	static ConstructorHelpers::FClassFinder<UUserWidget>CheatObj(TEXT("/Game/UI/Cheat"));
+	cheatWidgetClass = CheatObj.Class;
+
+	if (cheatWidgetClass!=nullptr)
+	{
+		CheatWidgetPtr= CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), cheatWidgetClass);
+
+		if (CheatWidgetPtr)
+		{
+			CheatWidgetPtr->AddToViewport();
+		}
+	}
+
+
+	CurrentWidget = nullptr;
+
+	BattleLock = false;
+	CooperationLock = false;
+	AgainstLock = false;
+	CustomLock = false;
+	CollectionLock = false;
+	ReplayLock = false;
+
+	//UGameplayStatics::OpenLevel(UGameplayStatics::GetPlayerController(GWorld, 0)->GetWorld(), FName("mymap"));
+}
+
+

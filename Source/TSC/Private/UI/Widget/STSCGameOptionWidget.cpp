@@ -247,7 +247,6 @@ void STSCGameOptionWidget::MusicSliderValueChange(float Value)
 	//
 	MusicTextBlock->SetText(FText::FromString(FString::FromInt(FMath::RoundToInt(Value * 100)) + FString("%")));
 	//
-	//TSCDataHandle::Get()->SetVolume(Value, -1.f);
 	ChangeVolume.ExecuteIfBound(Value, -1.f);
 }
 

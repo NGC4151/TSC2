@@ -18,5 +18,5 @@ public:
 	ATSCMenuHUD();
 
 	TSharedPtr<class STSCHUDWidget>MenuHUDWidget;
-	
+
 };

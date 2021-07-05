@@ -84,12 +84,10 @@ void TSCJsonHandle::UpDataSaveData(FString Culture, float MusicVol, float SoundV
 	FString jsonStr;
 	GetJsonObjToJsonStr(Jsonobject, &jsonStr);
 
-	// TSSCHelper::Debug(FString("Origin Str: ") + jsonStr, FColor::Yellow);
-
 	jsonStr.RemoveAt(0, 8);
 	jsonStr.RemoveFromEnd(FString("}"));
-
-	TSSCHelper::Debug(FString("New Str: ") + jsonStr, FColor::Yellow);
+	//Debug输出存档数据
+	//TSSCHelper::Debug(FString("New Str: ") + jsonStr, FColor::Yellow);
 
 	WriteDataToSaveDataFile(jsonStr, RelativePath, SaveDataFileName);
 

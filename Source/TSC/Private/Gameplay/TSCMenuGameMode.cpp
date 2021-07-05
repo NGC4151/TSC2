@@ -19,10 +19,4 @@ void ATSCMenuGameMode::BeginPlay()
 	
 }
 
-void ATSCMenuGameMode::onPressed()
-{
-	addui();
-	GEngine->AddOnScreenDebugMessage(-1, 20.f, FColor::Blue, FString("game mode called!!"));
-}
-
 

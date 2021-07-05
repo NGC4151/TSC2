@@ -18,12 +18,5 @@ public:
 	ATSCMenuGameMode();
 
 	virtual void BeginPlay()override;
-
-	
-	void onPressed();
-
-	UFUNCTION(BlueprintImplementableEvent, Category = UI)
-	void addui();
-
 	
 };

@@ -1,9 +1,9 @@
 // Project:         Advanced Locomotion System V4 on C++
-// Copyright:       Copyright (C) 2020 Doğa Can Yanıkoğlu
+// Copyright:       Copyright (C) 2021 Doğa Can Yanıkoğlu
 // License:         MIT License (http://www.opensource.org/licenses/mit-license.php)
 // Source Code:     https://github.com/dyanikoglu/ALSV4_CPP
 // Original Author: Doğa Can Yanıkoğlu
-// Contributors:    Haziq Fadhil
+// Contributors:    Haziq Fadhil, Drakynfly, CanisHelix
 
 
 #pragma once
@@ -14,15 +14,21 @@
 #include "Library/ALSCharacterStructLibrary.h"
 #include "Engine/DataTable.h"
 #include "GameFramework/Character.h"
-#include "Kismet/KismetSystemLibrary.h"
 
 #include "ALSBaseCharacter.generated.h"
 
+// forward declarations
+class UALSDebugComponent;
 class UTimelineComponent;
 class UAnimInstance;
 class UAnimMontage;
 class UALSCharacterAnimInstance;
+class UALSPlayerCameraBehavior;
 enum class EVisibilityBasedAnimTickOption : uint8;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FJumpPressedSignature);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRagdollStateChangedSignature, bool, bRagdollState);
 
 /*
  * Base character class
@@ -35,7 +41,7 @@ class ALSV4_CPP_API AALSBaseCharacter : public ACharacter
 public:
 	AALSBaseCharacter(const FObjectInitializer& ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, Category= "Movement")
+	UFUNCTION(BlueprintCallable, Category = "ALS|Movement")
 	FORCEINLINE class UALSCharacterMovementComponent* GetMyMovementComponent() const
 	{
 		return MyCharacterMovementComponent;
@@ -46,8 +52,6 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void PreInitializeComponents() override;
-
-	virtual void Restart() override;
 
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
@@ -149,19 +153,10 @@ public:
 
 	/** Rolling Montage Play Replication*/
 	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "ALS|Character States")
-	void Server_PlayMontage(UAnimMontage* montage, float track);
+	void Server_PlayMontage(UAnimMontage* Montage, float PlayRate);
 
 	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category = "ALS|Character States")
-	void Multicast_PlayMontage(UAnimMontage* montage, float track);
-
-	/** Mantling*/
-	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "ALS|Character States")
-	void Server_MantleStart(float MantleHeight, const FALSComponentAndTransform& MantleLedgeWS,
-	                        EALSMantleType MantleType);
-
-	UFUNCTION(BlueprintCallable, NetMulticast, Reliable, Category = "ALS|Character States")
-	void Multicast_MantleStart(float MantleHeight, const FALSComponentAndTransform& MantleLedgeWS,
-	                           EALSMantleType MantleType);
+	void Multicast_PlayMontage(UAnimMontage* Montage, float PlayRate);
 
 	/** Ragdolling*/
 	UFUNCTION(BlueprintCallable, Category = "ALS|Character States")
@@ -183,6 +178,12 @@ public:
 	void Multicast_RagdollEnd(FVector CharacterLocation);
 
 	/** Input */
+
+	UPROPERTY(BlueprintAssignable, Category = "ALS|Input")
+	FJumpPressedSignature JumpPressedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "ALS|Input")
+	FRagdollStateChangedSignature RagdollStateChangedDelegate;
 
 	UFUNCTION(BlueprintGetter, Category = "ALS|Input")
 	EALSStance GetDesiredStance() const { return DesiredStance; }
@@ -216,18 +217,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ALS|Rotation System")
 	void SetActorLocationAndTargetRotation(FVector NewLocation, FRotator NewRotation);
 
-	/** Mantle System */
-
-	/** Implement on BP to get correct mantle parameter set according to character state */
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "ALS|Mantle System")
-	FALSMantleAsset GetMantleAsset(EALSMantleType MantleType);
-
-	UFUNCTION(BlueprintCallable, Category = "ALS|Mantle System")
-	virtual bool MantleCheckGrounded();
-
-	UFUNCTION(BlueprintCallable, Category = "ALS|Mantle System")
-	virtual bool MantleCheckFalling();
-
 	/** Movement System */
 
 	UFUNCTION(BlueprintGetter, Category = "ALS|Movement System")
@@ -242,7 +231,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ALS|Movement System")
 	EALSGait GetAllowedGait() const;
 
-	UFUNCTION(BlueprintCallable, Category = "ALS|Movement States")
+	UFUNCTION(BlueprintCallable, Category = "ALS|Movement System")
 	EALSGait GetActualGait(EALSGait AllowedGait) const;
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Movement System")
@@ -255,8 +244,8 @@ public:
 
 	/** BP implementable function that called when A Montage starts, e.g. during rolling */
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "ALS|Movement System")
-	void Replicated_PlayMontage(UAnimMontage* montage, float track);
-	virtual void Replicated_PlayMontage_Implementation(UAnimMontage* montage, float track);
+	void Replicated_PlayMontage(UAnimMontage* Montage, float PlayRate);
+	virtual void Replicated_PlayMontage_Implementation(UAnimMontage* Montage, float PlayRate);
 
 	/** Implement on BP to get required roll animation according to character's state */
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "ALS|Movement System")
@@ -265,11 +254,16 @@ public:
 	/** Utility */
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Utility")
+	UALSCharacterAnimInstance* GetMainAnimInstance() { return MainAnimInstance; }
+
+	UFUNCTION(BlueprintCallable, Category = "ALS|Utility")
 	float GetAnimCurveValue(FName CurveName) const;
 
-	/** Implement on BP to draw debug spheres */
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "ALS|Debug")
-	void DrawDebugSpheres();
+	UFUNCTION(BlueprintCallable, Category = "ALS|Utility")
+	void SetVisibleMesh(USkeletalMesh* NewSkeletalMesh);
+
+	UFUNCTION(BlueprintCallable, Server, Reliable, Category = "ALS|Utility")
+	void Server_SetVisibleMesh(USkeletalMesh* NewSkeletalMesh);
 
 	/** Camera System */
 
@@ -277,7 +271,7 @@ public:
 	bool IsRightShoulder() const { return bRightShoulder; }
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Camera System")
-	void SetRightShoulder(bool bNewRightShoulder) { bRightShoulder = bNewRightShoulder; }
+	void SetRightShoulder(bool bNewRightShoulder);
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Camera System")
 	virtual ECollisionChannel GetThirdPersonTraceParams(FVector& TraceOrigin, float& TraceRadius);
@@ -290,6 +284,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ALS|Camera System")
 	void GetCameraParameters(float& TPFOVOut, float& FPFOVOut, bool& bRightShoulderOut) const;
+
+	UFUNCTION(BlueprintCallable, Category = "ALS|Camera System")
+	void SetCameraBehavior(UALSPlayerCameraBehavior* CamBeh) { CameraBehavior = CamBeh; }
 
 	/** Essential Information Getters/Setters */
 
@@ -320,7 +317,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ALS|Essential Information")
 	void SetSpeed(float NewSpeed);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "ALS|Essential Information")
 	FRotator GetAimingRotation() const { return AimingRotation; }
 
 	UFUNCTION(BlueprintGetter, Category = "ALS|Essential Information")
@@ -357,6 +354,8 @@ protected:
 
 	virtual void OnOverlayStateChanged(EALSOverlayState PreviousState);
 
+	virtual void OnVisibleMeshChanged(const USkeletalMesh* PreviousSkeletalMesh);
+
 	virtual void OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
 
 	virtual void OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
@@ -371,31 +370,11 @@ protected:
 
 	void UpdateCharacterMovement();
 
-	void UpdateDynamicMovementSettingsNetworked(EALSGait AllowedGait);
-
-	void UpdateDynamicMovementSettingsStandalone(EALSGait AllowedGait);
-
 	void UpdateGroundedRotation(float DeltaTime);
 
 	void UpdateInAirRotation(float DeltaTime);
 
-	/** Mantle System */
-
-	virtual void MantleStart(float MantleHeight, const FALSComponentAndTransform& MantleLedgeWS,
-	                         EALSMantleType MantleType);
-
-	virtual bool MantleCheck(const FALSMantleTraceSettings& TraceSettings,
-	                         EDrawDebugTrace::Type DebugType = EDrawDebugTrace::Type::ForOneFrame);
-
-	UFUNCTION()
-	virtual void MantleUpdate(float BlendIn);
-
-	UFUNCTION()
-	virtual void MantleEnd();
-
 	/** Utils */
-
-	float GetMappedSpeed() const;
 
 	void SmoothCharacterRotation(FRotator Target, float TargetInterpSpeed, float ActorInterpSpeed, float DeltaTime);
 
@@ -444,14 +423,17 @@ protected:
 	void LookingDirectionPressedAction();
 
 	/** Replication */
-	UFUNCTION()
+	UFUNCTION(Category = "ALS|Replication")
 	void OnRep_RotationMode(EALSRotationMode PrevRotMode);
 
-	UFUNCTION()
+	UFUNCTION(Category = "ALS|Replication")
 	void OnRep_ViewMode(EALSViewMode PrevViewMode);
 
-	UFUNCTION()
+	UFUNCTION(Category = "ALS|Replication")
 	void OnRep_OverlayState(EALSOverlayState PrevOverlayState);
+
+	UFUNCTION(Category = "ALS|Replication")
+	void OnRep_VisibleMesh(USkeletalMesh* NewVisibleMesh);
 
 protected:
 	/* Custom movement component*/
@@ -508,34 +490,8 @@ protected:
 
 	/** Movement System */
 
-	UPROPERTY(BlueprintReadOnly, Category = "ALS|Movement System")
-	FALSMovementSettings CurrentMovementSettings;
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "ALS|Movement System")
 	FDataTableRowHandle MovementModel;
-
-	/** Mantle System */
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ALS|Mantle System")
-	FALSMantleTraceSettings GroundedTraceSettings;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ALS|Mantle System")
-	FALSMantleTraceSettings AutomaticTraceSettings;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ALS|Mantle System")
-	FALSMantleTraceSettings FallingTraceSettings;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ALS|Mantle System")
-	UCurveFloat* MantleTimelineCurve;
-
-	/** If a dynamic object has a velocity bigger than this value, do not start mantle */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ALS|Mantle System")
-	float AcceptableVelocityWhileMantling = 10.0f;
-
-	/** Components */
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "ALS|Components")
-	UTimelineComponent* MantleTimeline = nullptr;
 
 	/** Essential Information */
 
@@ -573,6 +529,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Replicated, Category = "ALS|Essential Information")
 	FRotator ReplicatedControlRotation = FRotator::ZeroRotator;
+
+	/** Replicated Skeletal Mesh Information*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ALS|Skeletal Mesh", ReplicatedUsing = OnRep_VisibleMesh)
+	USkeletalMesh* VisibleMesh = nullptr;
 
 	/** State Values */
 
@@ -613,23 +573,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "ALS|Rotation System")
 	float YawOffset = 0.0f;
 
-	/** Mantle System */
-
-	UPROPERTY(BlueprintReadOnly, Category = "ALS|Mantle System")
-	FALSMantleParams MantleParams;
-
-	UPROPERTY(BlueprintReadOnly, Category = "ALS|Mantle System")
-	FALSComponentAndTransform MantleLedgeLS;
-
-	UPROPERTY(BlueprintReadOnly, Category = "ALS|Mantle System")
-	FTransform MantleTarget = FTransform::Identity;
-
-	UPROPERTY(BlueprintReadOnly, Category = "ALS|Mantle System")
-	FTransform MantleActualStartOffset = FTransform::Identity;
-
-	UPROPERTY(BlueprintReadOnly, Category = "ALS|Mantle System")
-	FTransform MantleAnimatedStartOffset = FTransform::Identity;
-
 	/** Breakfall System */
 
 	/** If player hits to the ground with a specified amount of velocity, switch to breakfall state */
@@ -638,10 +581,14 @@ protected:
 
 	/** If player hits to the ground with an amount of velocity greater than specified value, switch to breakfall state */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "ALS|Breakfall System", meta = (EditCondition =
-		"bBreakfallOnLand"))
+	        "bBreakfallOnLand"))
 	float BreakfallOnLandVelocity = 600.0f;
 
 	/** Ragdoll System */
+
+	/** If the skeleton uses a reversed pelvis bone, flip the calculation operator */
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "ALS|Ragdoll System")
+	bool bReversedPelvis = false;
 
 	/** If player hits to the ground with a specified amount of velocity, switch to ragdoll state */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "ALS|Ragdoll System")
@@ -649,7 +596,7 @@ protected:
 
 	/** If player hits to the ground with an amount of velocity greater than specified value, switch to ragdoll state */
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "ALS|Ragdoll System", meta = (EditCondition =
-		"bRagdollOnLand"))
+	        "bRagdollOnLand"))
 	float RagdollOnLandVelocity = 1000.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "ALS|Ragdoll System")
@@ -676,8 +623,11 @@ protected:
 
 	float PreviousAimYaw = 0.0f;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "ALS|Utility")
 	UALSCharacterAnimInstance* MainAnimInstance = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "ALS|Camera")
+	UALSPlayerCameraBehavior* CameraBehavior;
 
 	/** Last time the 'first' crouch/roll button is pressed */
 	float LastStanceInputTime = 0.0f;
@@ -694,6 +644,9 @@ protected:
 	/* Smooth out aiming by interping control rotation*/
 	FRotator AimingRotation = FRotator::ZeroRotator;
 
-	/** We won't use curve based movement on networked games */
-	bool bDisableCurvedMovement = false;
+	/** We won't use curve based movement and a few other features on networked games */
+	bool bEnableNetworkOptimizations = false;
+
+private:
+	UALSDebugComponent* DebugComponent = nullptr;
 };
